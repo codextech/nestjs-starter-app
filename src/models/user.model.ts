@@ -1,5 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Schema } from 'mongoose';
+import { RegisterMethod } from 'src/core/common/constants/register-method';
 import { RoleType } from 'src/core/common/constants/role-type';
 
 export const UserSchema = new mongoose.Schema(
@@ -10,6 +11,15 @@ export const UserSchema = new mongoose.Schema(
     phone: { type: String },
     password: { type: String },
     avatar: { type: String },
+    method :  {
+      type: String,
+      enum: [
+        RegisterMethod.LOCAL,
+        RegisterMethod.GOOGLE,
+        RegisterMethod.FACEBOOK,
+      ],
+      default: RegisterMethod.LOCAL,
+    },
 
     // user can have user role and as well as company team role same time
     roles:

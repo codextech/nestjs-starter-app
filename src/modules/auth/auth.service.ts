@@ -6,6 +6,8 @@ import { TokenPayloadDto } from './dto/TokenPayloadDto';
 import * as bcrypt from 'bcrypt';
 import { UserRegisterDto } from './dto/UserRegisterDto';
 import { RoleType } from 'src/core/common/constants/role-type';
+import { RegisterMethod } from 'src/core/common/constants/register-method';
+import { UserDocument } from '../user/interface/UserDocument';
 
 @Injectable()
 export class AuthService {
@@ -71,4 +73,47 @@ export class AuthService {
       }
     
       /* Facebook */
+
+
+      async findOrCreateFacebookAuth(profile , accessToken , refreshToken): Promise<UserDocument> {
+        console.log("UserService -> profile", profile)
+          const user = await this.userService
+            .findOne({ 
+              $or: [
+                { 'facebook.id': profile.id },
+                { 'email': profile.emails[0].value }
+            ]
+             })
+          if (user) {
+            return user;
+          }
+          const createdUser = this.userService.create({
+            isVerified: true,
+            email: profile.emails[0].value,
+            firstName: profile.name.givenName,
+            lastName: profile.name.familyName,
+            profileImage : profile.photos[0].value,
+            method : RegisterMethod.FACEBOOK,
+            roles : [RoleType.COMPANY],
+            facebook: {
+              id: profile.id,
+              token : accessToken,
+              email: profile.emails[0].value,
+            },
+          });
+          return createdUser
+      }
+
+      /* >> Facebook end << */
+
+
+
+      /* Google */
+
+      async findOrCreateGoogleAuth(profile): Promise<UserDocument> {
+        console.log("UserService -> profile", profile)
+        
+        return profile
+      }
+
 }
