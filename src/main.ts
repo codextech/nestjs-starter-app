@@ -6,8 +6,8 @@ import { AllExceptionsFilter } from './core/exceptions/global-exception.handler'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({transform: true, whitelist: true}));
-
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
