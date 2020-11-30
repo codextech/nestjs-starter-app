@@ -12,9 +12,9 @@ export const UserSchema = new mongoose.Schema(
     avatar: { type: String },
 
     // user can have user role and as well as company team role same time
-    roles: [
+    roles:
       {
-        type: String,
+        type: [String],
         enum: [
           RoleType.ADMIN,
           RoleType.USER,
@@ -23,7 +23,6 @@ export const UserSchema = new mongoose.Schema(
         ],
         default: RoleType.USER,
       },
-    ],
 
     // it will used for the users wo wil registered under specific company
     company: {

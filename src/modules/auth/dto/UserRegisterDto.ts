@@ -3,13 +3,17 @@
 
 
 import {
+    IsArray,
+    isArray,
     IsEmail,
+    IsEnum,
     IsNotEmpty,
     IsOptional,
     IsPhoneNumber,
     IsString,
     MinLength,
 } from 'class-validator';
+import { RoleType } from 'src/core/common/constants/role-type';
 
 export class UserRegisterDto {
     @IsString()
@@ -29,6 +33,13 @@ export class UserRegisterDto {
     @MinLength(6)
     readonly password: string;
 
+    @IsNotEmpty()
     @IsOptional()
-    phone: string;
+    @IsArray()
+    @IsEnum(RoleType)
+    roles?: string[]
+
+    isVerified? : boolean;
+
+    
 }

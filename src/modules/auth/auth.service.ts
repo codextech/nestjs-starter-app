@@ -3,7 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { TokenPayloadDto } from './dto/TokenPayloadDto';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
+import { UserRegisterDto } from './dto/UserRegisterDto';
+import { RoleType } from 'src/core/common/constants/role-type';
 
 @Injectable()
 export class AuthService {
@@ -52,5 +54,21 @@ export class AuthService {
           access_token: this.jwtService.sign(payload),
         };
       }
+
+
+      async register(userRegisterDto: UserRegisterDto) {
+        // logic here
+        let createUserDto : UserRegisterDto = {
+          ...userRegisterDto,
+          isVerified: true , // temporary 
+          password: await bcrypt.hash(userRegisterDto.password, 10),
+          roles: [RoleType.COMPANY]
+        };
+        let user = await this.userService.create(createUserDto);
+        user = user.toJSON()
+        const { password, verifyShortToken, verifyExpires, ...safeUser } = user;
+        return safeUser;
+      }
     
+      /* Facebook */
 }
