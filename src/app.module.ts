@@ -11,22 +11,24 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     ConfigModule.forRoot({
       envFilePath: `./env/.${process.env.NODE_ENV || 'development'}.env`,
-      isGlobal: true
+      isGlobal: true,
     }),
     // database
-    MongooseModule.forRootAsync(
-      {
+    MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
         // mongoose.set('debug' , true)
         return {
           uri: configService.get<string>('DATABASE_URI'),
-        }
+        };
       },
       inject: [ConfigService],
     }),
-    
-    SharedModule, UserModule, AuthModule],
+
+    SharedModule,
+    UserModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
