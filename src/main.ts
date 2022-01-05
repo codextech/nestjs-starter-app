@@ -6,7 +6,9 @@ import { AllExceptionsFilter } from './core/exceptions/global-exception.handler'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule , {
+    logger : ['error', 'warn', 'log', 'verbose', 'debug']
+  });
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({transform: true, whitelist: true}));
   const { httpAdapter } = app.get(HttpAdapterHost);
